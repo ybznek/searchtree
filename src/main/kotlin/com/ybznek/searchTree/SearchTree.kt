@@ -128,6 +128,14 @@ fun <V> SearchTree<SearchTree.ValueWithKey<V>>.searchBestValue(str: String): V? 
     }
 }
 
+fun <V> SearchTree<SearchTree.ValueWithKey<V>>.toMutableCopy(): MutableSearchTree<SearchTree.ValueWithKey<V>> {
+    val res = MutableSearchTree<SearchTree.ValueWithKey<V>>()
+    for (v in this.getValues()) {
+        res.add(v.value.key, v.value)
+    }
+    return res
+}
+
 fun <V> SearchTree<SearchTree.ValueWithKey<V>>.searchBest(key: String): SearchTree.Result<SearchTree.ValueWithKey<V>>? {
     return this
         .searchSequence(key)
