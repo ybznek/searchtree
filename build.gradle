@@ -1,0 +1,37 @@
+group 'com.ybznek'
+version '1.0.0'
+
+buildscript {
+    ext.kotlin_version = '1.6.0'
+    ext.junit_version = '5.8.2'
+    ext.assertk_version = '0.25'
+
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+apply plugin: 'kotlin'
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    archiveClassifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+    testImplementation "com.willowtreeapps.assertk:assertk-jvm:$assertk_version"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_version"
+}
