@@ -1,11 +1,12 @@
-@file:OptIn(ExperimentalStdlibApi::class)
-
 package com.ybznek.searchTree
 
-import java.util.*
+import com.ybznek.searchTree.node.ImmutableNode
+import com.ybznek.searchTree.node.Node
+import com.ybznek.searchTree.node.TreeNode
+import com.ybznek.searchTree.node.ValueNode
 
 internal object TreeOptimizer {
-    private val unitNode = Node.ValueNode(Unit)
+    private val unitNode = ValueNode(Unit)
 
     fun <V : Any> optimize(root: Node<V>): SearchTree<V> {
         return if (root.tree.isEmpty())
@@ -15,7 +16,7 @@ internal object TreeOptimizer {
             ImmutableSearchTree(optimizeNode(root))
     }
 
-    fun <V> optimizeNode(node: Node<V>): Node<V> {
+    private fun <V> optimizeNode(node: Node<V>): Node<V> {
         if (node.tree.isEmpty()) {
             return createValueNode(node)
         }
@@ -23,16 +24,19 @@ internal object TreeOptimizer {
         return when (node.tree.size) {
             1 -> createSingleBranchTree(node)
             else -> when (node.value) {
-                null -> Node.TreeNode(createMultiBranchTree(node))
-                else -> Node.ImmutableNode(node.value, createMultiBranchTree(node))
+                null -> TreeNode(createMultiBranchTree(node))
+                else -> ImmutableNode(node.value, createMultiBranchTree(node))
             }
         }
     }
 
     private fun <V> createValueNode(node: Node<V>): Node<V> {
         return when {
-            node.value === Unit -> unitNode as Node<V>
-            else -> Node.ValueNode(node.value)
+            node.value === Unit ->
+                @Suppress("UNCHECKED_CAST")
+                unitNode as Node<V>
+            else ->
+                ValueNode(node.value)
         }
     }
 
@@ -55,7 +59,11 @@ internal object TreeOptimizer {
     }
 
     private fun <V> buildHashMap(tree: Map<Char, Node<V>>): HashMap<Char, Node<V>> {
-        return tree.entries.associateByTo(HashMap(), { x -> x.key }, { x -> optimizeNode(x.value) })
+        return tree.entries.associateByTo(
+            HashMap(tree.entries.size),
+            { x -> x.key },
+            { x -> optimizeNode(x.value) }
+        )
     }
 
     private fun <V> buildCharIntervalMap(rangeSize: Int, tree: Map<Char, Node<V>>, min: Int): CharIntervalMap<Node<V>> {
@@ -67,7 +75,7 @@ internal object TreeOptimizer {
             }
         }
 
-        return CharIntervalMap(min.toChar(), arr) as CharIntervalMap<Node<V>>
+        return CharIntervalMap(min.toChar(), arr as Array<Node<V>>)
     }
 
     private fun <V> createSingleBranchTree(node: Node<V>): Node<V> {
@@ -91,10 +99,10 @@ internal object TreeOptimizer {
 
             }
         }*/
-        val tree = Collections.singletonMap(entry.key, optimizeNode(entryValue))
+        val tree = mapOf(entry.key to optimizeNode(entryValue))
         return when (node.value) {
-            null -> Node.TreeNode(tree)
-            else -> Node.ImmutableNode(node.value, tree)
+            null -> TreeNode(tree)
+            else -> ImmutableNode(node.value, tree)
         }
     }
 }

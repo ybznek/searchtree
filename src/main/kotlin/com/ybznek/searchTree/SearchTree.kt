@@ -1,12 +1,13 @@
 package com.ybznek.searchTree
 
+import com.ybznek.searchTree.node.Node
 import java.lang.Integer.max
 import java.lang.Integer.min
 
 /**
  * Allows to search multiple strings in one large string
  */
-public abstract class SearchTree<V : Any> {
+abstract class SearchTree<V : Any> {
 
     class ValueWithKey<V>(
         /**
@@ -32,16 +33,16 @@ public abstract class SearchTree<V : Any> {
         override fun toString() = value.toString()
     }
 
-    abstract fun searchSequence(str: String, startSearchIndex: IntRange = str.indices): Sequence<Result<V>>;
-    abstract fun searchSequence(str: String, indices: Sequence<Int>): Sequence<Result<V>>;
-    abstract fun getValues(): List<Result<V>>;
+    abstract fun searchSequence(str: String, startSearchIndex: IntRange = str.indices): Sequence<Result<V>>
+    abstract fun searchSequence(str: String, indices: Sequence<Int>): Sequence<Result<V>>
+    abstract fun getValues(): List<Result<V>>
 
     internal open fun <V> sequenceSearch(str: String, root: Node<V>, startSearchIndex: IntRange): Sequence<Result<V>> {
         val first = max(0, startSearchIndex.first)
         val last = min(str.length - 1, startSearchIndex.last)
         val range = first..last
 
-        return sequence<Result<V>> {
+        return sequence {
             val ref = SearchRef<V>()
             for (i in range) {
                 searchInternal(i, root, ref, str)
@@ -104,7 +105,7 @@ public abstract class SearchTree<V : Any> {
 
         addToListRecursively(root)
 
-        return list;
+        return list
     }
 
     internal class SearchRef<V> {

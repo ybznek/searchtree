@@ -1,6 +1,9 @@
 package com.ybznek.searchTree
 
-public class StringList private constructor(private val tree: SearchTree<Unit>) {
+/**
+ * Provides search structure for strings
+ */
+class StringList private constructor(private val tree: SearchTree<Unit>) {
 
     infix fun isNotIn(inputString: String): Boolean {
         return tree.searchSequence(inputString).none()

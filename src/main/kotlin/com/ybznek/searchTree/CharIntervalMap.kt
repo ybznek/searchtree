@@ -5,7 +5,7 @@ package com.ybznek.searchTree
  * Space efficient Map, if keys is continuous sequence of characters
  * Todo : null & notnull values are not handled
  */
-internal class CharIntervalMap<Value>(val minChar: Char, val items: Array<Value>) : Map<Char, Value> {
+internal class CharIntervalMap<Value>(private val minChar: Char, private val items: Array<Value>) : Map<Char, Value> {
 
     val maxChar: Char
         get() = minChar + items.size - 1
@@ -30,7 +30,7 @@ internal class CharIntervalMap<Value>(val minChar: Char, val items: Array<Value>
     }
 
     override fun get(key: Char): Value? {
-        val requestedIndex = key.toInt() - minChar.toInt()
+        val requestedIndex = key.code - minChar.code
 
         return if (requestedIndex >= 0 && requestedIndex < items.size) {
             items[requestedIndex]
