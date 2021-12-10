@@ -22,6 +22,17 @@ task sourcesJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
 }
 
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'com.ybznek.searchtree'
+            artifactId = 'searchtree'
+            version = '1.3'
+            from components.kotlin
+        }
+    }
+}
+
 artifacts {
     archives sourcesJar
 }
