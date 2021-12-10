@@ -1,12 +1,12 @@
 package com.ybznek.searchTree.node
 
-import com.ybznek.searchTree.SearchTree
+import com.ybznek.searchTree.SearchTree.SearchRef
 
 internal sealed class Node<V> {
     abstract val value: V?
     abstract val tree: Map<Char, Node<V>>
 
-    open fun getNextRootOrNode(str: String, index: Int, ref: SearchTree.SearchRef<V>) {
+    open fun getNextRootOrNode(str: String, index: Int, ref: SearchRef<V>) {
 
         if (index >= str.length) {
             ref.value = value
@@ -31,7 +31,7 @@ internal class PrefixTreeNode<V>(private val prefix: String, private val node: N
             return mapOf(prefix[0] to nextNode)
         }
 
-    override fun getNextRootOrNode(str: String, index: Int, ref: SearchTree.SearchRef<V>) {
+    override fun getNextRootOrNode(str: String, index: Int, ref: SearchRef<V>) {
         if (str.regionMatches(index, prefix, 0, prefix.length)) {
             ref.node = node
             //ref.value = value
