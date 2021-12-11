@@ -14,8 +14,12 @@ internal sealed class Node<V> {
         }
         val char = str[index]
 
-        ref.node = tree[char]
-        ref.value = tree[char]?.value
+        val node = tree[char] ?: return
+
+        ref.node = node
+        if (node !is PrefixTreeNodeBase) {
+            ref.value = node.value
+        }
     }
 }
 

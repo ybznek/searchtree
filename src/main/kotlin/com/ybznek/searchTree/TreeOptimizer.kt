@@ -99,20 +99,20 @@ internal object TreeOptimizer {
                     if (tree.size == 1) {
                         val f = tree.first()
                         when (f.value) {
-                            is ValueOnlyNode -> return PrefixTreeNodeValueOnly(childPrefix.toString() + f.key, f.value.value)
+                            is ValueOnlyNode, is UnitNode -> return PrefixTreeNodeValueOnly(childPrefix.toString() + f.key, f.value.value)
                             is TreeOnlyNode -> return PrefixTreeNodeNodeOnly(childPrefix.toString() + f.key, TreeOnlyNode(f.value.tree))
+                            else -> Unit
                         }
 
                     }
                 }
                 is ImmutableNodeGeneric -> {
-                    // (value, tree) && tree -> (1x node)
-                    // General prefix + dite
                     val tree = optimizedChildNode.tree.entries
                     if (tree.size == 1) {
                         val f = tree.first()
                         when (f.value) {
-                            is ValueOnlyNode -> return PrefixTreeNodeNodeAndValue(childPrefix.toString(), TreeOnlyNode(mapOf(f.key to f.value)), optimizedChildNode.value)
+                            is ValueOnlyNode, is UnitNode -> return PrefixTreeNodeNodeAndValue(childPrefix.toString(), TreeOnlyNode(mapOf(f.key to f.value)), optimizedChildNode.value)
+                            else -> Unit
                         }
 
                     }

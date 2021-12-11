@@ -30,7 +30,6 @@ class SearchTreeTest {
         )
     }
 
-
     @Test
     fun testPrefixSimple() {
         val searchTree = MutableSearchTree<SearchTree.ValueWithKey<String>>()
