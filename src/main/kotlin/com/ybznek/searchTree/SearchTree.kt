@@ -18,7 +18,9 @@ abstract class SearchTree<V : Any> {
          * Referenced value
          */
         val value: V
-    )
+    ) {
+
+    }
 
     class Result<V>(
         /**
@@ -69,7 +71,7 @@ abstract class SearchTree<V : Any> {
         var node = root
         do {
             ref.reset()
-            node.getNextRootOrNode(str, searchIndex, ref)
+            node.nextRootOrNode(str, searchIndex, ref)
 
             if (ref.value == null && ref.node == null) {
                 break
@@ -78,7 +80,7 @@ abstract class SearchTree<V : Any> {
                 node = ref.node as Node<V>
             }
             if (ref.value != null) {
-                yield(Result(searchIndex - str.length + 1, ref.value!!))
+                yield(Result(searchIndex, ref.value!!))
             }
 
             searchIndex += ref.shift
@@ -135,8 +137,8 @@ fun <V> SearchTree<SearchTree.ValueWithKey<V>>.toMutableCopy(): MutableSearchTre
     return res
 }
 
-fun <V> SearchTree<SearchTree.ValueWithKey<V>>.searchBest(key: String): SearchTree.Result<SearchTree.ValueWithKey<V>>? {
+fun <V> SearchTree<SearchTree.ValueWithKey<V>>.searchBest(haystack: String): SearchTree.Result<SearchTree.ValueWithKey<V>>? {
     return this
-        .searchSequence(key)
+        .searchSequence(haystack)
         .maxByOrNull { x -> x.value.key.length }
 }

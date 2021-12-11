@@ -1,13 +1,17 @@
 package com.ybznek.searchTree
 
 import com.ybznek.searchTree.node.ImmutableNode
+import com.ybznek.searchTree.node.ImmutableNodeGeneric
 import com.ybznek.searchTree.node.Node
-import com.ybznek.searchTree.node.PrefixTreeNode
-import com.ybznek.searchTree.node.TreeNode
-import com.ybznek.searchTree.node.ValueNode
+import com.ybznek.searchTree.node.PrefixTreeNodeGeneral
+import com.ybznek.searchTree.node.PrefixTreeNodeNodeOnly
+import com.ybznek.searchTree.node.PrefixTreeNodeValueOnly
+import com.ybznek.searchTree.node.TreeOnlyNode
+import com.ybznek.searchTree.node.UnitNode
+import com.ybznek.searchTree.node.UnitNode.tree
+import com.ybznek.searchTree.node.ValueOnlyNode
 
 internal object TreeOptimizer {
-    private val unitNode = ValueNode(Unit)
 
     fun <V : Any> optimize(root: Node<V>): SearchTree<V> {
         return if (root.tree.isEmpty())
@@ -17,13 +21,7 @@ internal object TreeOptimizer {
             ImmutableSearchTree(optimizeNode(root))
     }
 
-    private fun <V> optimizeNodeNullable(node: Node<V>?): Node<V>? {
-        if (node == null)
-            return null
-        return optimizeNode(node)
-    }
-
-    private fun <V> optimizeNode(node: Node<V>): Node<V> {
+    private fun <V> optimizeNode(node: Node<V>): ImmutableNode<V> {
         if (node.tree.isEmpty()) {
             return createValueNode(node)
         }
@@ -31,19 +29,16 @@ internal object TreeOptimizer {
         return when (node.tree.size) {
             1 -> createSingleBranchTree(node)
             else -> when (node.value) {
-                null -> TreeNode(createMultiBranchTree(node))
-                else -> ImmutableNode(node.value, createMultiBranchTree(node))
+                null -> TreeOnlyNode(createMultiBranchTree(node))
+                else -> ImmutableNodeGeneric(node.value, createMultiBranchTree(node))
             }
         }
     }
 
-    private fun <V> createValueNode(node: Node<V>): Node<V> {
+    private fun <V> createValueNode(node: Node<V>): ImmutableNode<V> {
         return when {
-            node.value === Unit ->
-                @Suppress("UNCHECKED_CAST")
-                unitNode as Node<V>
-            else ->
-                ValueNode(node.value)
+            node.value === Unit -> UnitNode.asTypedNode()
+            else -> ValueOnlyNode(node.value)
         }
     }
 
@@ -85,32 +80,55 @@ internal object TreeOptimizer {
         return CharIntervalMap(min.toChar(), arr as Array<Node<V>>)
     }
 
-    private fun <V> createSingleBranchTree(node: Node<V>): Node<V> {
+    private fun <V> createSingleBranchTree(node: Node<V>): ImmutableNode<V> {
         val entry = node.tree.entries.single()
 
-        return createSingleBranch(node.value, optimizeNode(entry.value), entry.key)
+        val optimizedChildNode = optimizeNode(entry.value)
+        return createSingleBranch(node.value, optimizedChildNode, entry.key)
     }
 
-    private fun <V> createSingleBranch(currentValue: V?, optimizedChildNode: Node<V>, childPrefix: Char): Node<V> {
+    private fun <V> createSingleBranch(currentValue: V?, optimizedChildNode: ImmutableNode<V>, childPrefix: Char): ImmutableNode<V> {
 
         if (currentValue == null) {
-            // todo
             when (optimizedChildNode) {
-                is PrefixTreeNode -> return optimizedChildNode.withExtraPrefix(childPrefix)
-                //is ValueNode -> return PrefixTreeNode(childPrefix.toString(), optimizedChildNode)
+                is PrefixTreeNodeGeneral -> return optimizedChildNode.withExtraPrefix(childPrefix)
+                is ValueOnlyNode -> Unit//return PrefixTreeNodeValueOnly(childPrefix.toString(), optimizedChildNode.value)
+
+                is TreeOnlyNode -> {
+                    val tree = optimizedChildNode.tree.entries
+                    if (tree.size == 1) {
+                        val f = tree.first()
+                        when (f.value) {
+                            is ValueOnlyNode -> return PrefixTreeNodeValueOnly(childPrefix.toString() + f.key, f.value.value)
+                            is TreeOnlyNode -> return PrefixTreeNodeNodeOnly(childPrefix.toString() + f.key, TreeOnlyNode(f.value.tree))
+                        }
+
+                    }
+                }
+                is ImmutableNodeGeneric -> {
+                    // (value, tree) && tree -> (1x node)
+                    // General prefix + dite
+                    val tree = optimizedChildNode.tree.entries
+                    if (tree.size == 1) {
+                        val f = tree.first()
+                        when (f.value) {
+                            is ValueOnlyNode -> return PrefixTreeNodeGeneral(childPrefix.toString(), TreeOnlyNode(mapOf(f.key to f.value)), optimizedChildNode.value)
+                        }
+
+                    }
+                }
+
+                // is TreeOnlyNode -> return PrefixTreeNodeNodeOnly(childPrefix.toString(), optimizedChildNode)
+                //is ImmutableNodeGeneric -> return PrefixTreeNodeGeneral(childPrefix.toString(), TreeOnlyNode(optimizedChildNode.tree), optimizedChildNode.value)
+
+                is UnitNode -> Unit
             }
-            /*val entries = optimizedChildNode.tree.entries
-            if (entries.size == 1 && optimizedChildNode.value == null) {
-                val (key, value) = entries.single()
-                return PrefixTreeNode("${childPrefix}${key}", optimizeNode(value))
-            }*/
-            // todo
         }
 
-        val tree = mapOf(childPrefix to optimizeNode(optimizedChildNode))
+        val tree = mapOf(childPrefix to optimizedChildNode)
         return when (currentValue) {
-            null -> TreeNode(tree)
-            else -> ImmutableNode(currentValue, tree)
+            null -> TreeOnlyNode(tree)
+            else -> ImmutableNodeGeneric(currentValue, tree)
         }
     }
 }

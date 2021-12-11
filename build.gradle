@@ -33,12 +33,12 @@ publishing {
     }
 }
 
-artifacts {
-    archives sourcesJar
-}
-
 repositories {
     mavenCentral()
+}
+
+artifacts {
+    archives sourcesJar
 }
 
 dependencies {
