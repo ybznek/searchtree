@@ -5,6 +5,7 @@ import assertk.assertions.isEqualTo
 import com.ybznek.searchTree.SearchTree.SearchRef
 import com.ybznek.searchTree.node.ImmutableNode
 import com.ybznek.searchTree.node.ImmutableNodeGeneric
+import com.ybznek.searchTree.node.PrefixTreeNodeGeneral
 import com.ybznek.searchTree.node.PrefixTreeNodeNodeOnly
 import org.junit.jupiter.api.Test
 
@@ -28,7 +29,18 @@ class TreeOptimizerTest {
         val ref = SearchRef<Int>()
         prefixNode.nextRootOrNode("012prefix", 2, ref)
         assertThat(ref.value).isEqualTo(null)
+        assertThat(ref.shift).isEqualTo(1)
         assertThat(ref.node).isEqualTo(null)
+    }
 
+    @Test
+    fun prefixWithExtra() {
+        val nextNode = ImmutableNodeGeneric(null, mapOf('3' to ImmutableNodeGeneric(3, emptyMap())))
+        val prefixNode = PrefixTreeNodeGeneral("prefix", nextNode,123)
+        val ref = SearchRef<Int>()
+        prefixNode.nextRootOrNode("012prefix", 3, ref)
+        assertThat(ref.value).isEqualTo(123)
+        assertThat(ref.shift).isEqualTo(6)
+        assertThat(ref.node).isEqualTo(nextNode)
     }
 }

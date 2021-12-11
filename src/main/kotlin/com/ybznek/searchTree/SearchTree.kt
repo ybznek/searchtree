@@ -80,7 +80,7 @@ abstract class SearchTree<V : Any> {
                 node = ref.node as Node<V>
             }
             if (ref.value != null) {
-                yield(Result(searchIndex, ref.value!!))
+                yield(Result(index, ref.value!!))
             }
 
             searchIndex += ref.shift

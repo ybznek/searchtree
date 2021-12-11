@@ -51,7 +51,7 @@ internal open class PrefixTreeNodeGeneral<V> constructor(internal val prefix: St
         if (str.regionMatches(index, prefix, 0, prefix.length)) {
             ref.node = node
             ref.value = value
-            ref.shift = str.length - index - 1
+            ref.shift = prefix.length
         }
     }
 }
@@ -65,7 +65,7 @@ internal class PrefixTreeNodeNodeOnly<V> constructor(prefix: String, node: Node<
     override fun nextRootOrNode(str: String, index: Int, ref: SearchRef<V>) {
         if (str.regionMatches(index, prefix, 0, prefix.length)) {
             ref.node = node
-            ref.shift = str.length - index
+            ref.shift = prefix.length
         }
     }
 }
@@ -79,7 +79,7 @@ internal class PrefixTreeNodeValueOnly<V> constructor(prefix: String, override v
     override fun nextRootOrNode(str: String, index: Int, ref: SearchRef<V>) {
         if (str.regionMatches(index, prefix, 0, prefix.length)) {
             ref.value = value
-            ref.shift = str.length - index - 1
+            ref.shift = prefix.length
         }
     }
 }
