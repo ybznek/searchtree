@@ -2,9 +2,9 @@ package com.ybznek.searchTree.node
 
 import com.ybznek.searchTree.SearchTree.SearchRef
 
-internal sealed class Node<V> {
-    abstract val value: V?
-    abstract val tree: Map<Char, Node<V>>
+internal sealed interface Node<V> {
+    val value: V?
+    val tree: Map<Char, Node<V>>
 
     open fun nextRootOrNode(str: String, index: Int, ref: SearchRef<V>) {
 
@@ -23,10 +23,9 @@ internal sealed class Node<V> {
     }
 }
 
-internal sealed class ImmutableNode<V> : Node<V>() {
-}
+internal sealed interface ImmutableNode<V> : Node<V>
 
-internal sealed class PrefixTreeNodeBase<V> constructor(internal val prefix: String) : ImmutableNode<V>() {
+internal sealed class PrefixTreeNodeBase<V> constructor(internal val prefix: String) : ImmutableNode<V> {
 
     abstract val node: Node<V>?
 
@@ -89,19 +88,19 @@ internal class PrefixTreeNodeValueOnly<V> constructor(prefix: String, override v
 internal class ImmutableNodeGeneric<V>(
     override val value: V? = null,
     override val tree: Map<Char, Node<V>>
-) : ImmutableNode<V>()
+) : ImmutableNode<V>
 
 internal class MutableNode<V>(
     override var value: V? = null,
     override var tree: HashMap<Char, MutableNode<V>> = HashMap()
-) : Node<V>()
+) : Node<V>
 
-internal class ValueOnlyNode<V>(override val value: V?) : ImmutableNode<V>() {
+internal class ValueOnlyNode<V>(override val value: V?) : ImmutableNode<V> {
     override val tree: Map<Char, Node<V>>
         get() = emptyMap()
 }
 
-internal object UnitNode : ImmutableNode<Unit>() {
+internal object UnitNode : ImmutableNode<Unit> {
     override val tree: Map<Char, Node<Unit>>
         get() = emptyMap()
     override val value
@@ -113,7 +112,7 @@ internal object UnitNode : ImmutableNode<Unit>() {
     }
 }
 
-internal class TreeOnlyNode<V>(override var tree: Map<Char, Node<V>>) : ImmutableNode<V>() {
+internal class TreeOnlyNode<V>(override var tree: Map<Char, Node<V>>) : ImmutableNode<V> {
     override val value: V?
         get() = null
 }

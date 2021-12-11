@@ -32,6 +32,7 @@ class SearchTreeTest {
 
     @Test
     fun testPrefixSimple() {
+        example()
         val searchTree = MutableSearchTree<SearchTree.ValueWithKey<String>>()
         searchTree.addKeyValue("123", "match")
         val o = searchTree.optimized() as ImmutableSearchTree<SearchTree.ValueWithKey<String>>
@@ -42,6 +43,16 @@ class SearchTreeTest {
         val valueNode = getChecked<ValueOnlyNode<SearchTree.ValueWithKey<String>>>(afterPrefxNode)
         assertThat(valueNode.value!!.value).isEqualTo("match")
         o.searchBest("123")!!.testValue("match")
+    }
+
+    private fun example() {
+        val mutableSearchTree = MutableSearchTree<Int>()
+        mutableSearchTree.add("large", 111)
+        mutableSearchTree.add("string", 222)
+        val firstResult = mutableSearchTree.searchSequence("large string").toList()[0].value // 111
+        val immutableSearchTree = mutableSearchTree.optimized() // converts to immutable, optimized structure
+        val secondResult = immutableSearchTree.searchSequence("large string").toList()[1].value // 222
+        val debug = 42;
     }
 
     @Test
