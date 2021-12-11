@@ -92,23 +92,19 @@ internal object TreeOptimizer {
     }
 
     private fun <V> createSingleBranch(currentValue: V?, optimizedChildNode: Node<V>, childPrefix: Char): Node<V> {
-        if (false) { //todo
-            if (currentValue == null) {
-                if (optimizedChildNode is PrefixTreeNode) {
-                    return optimizedChildNode.withExtraPrefix(childPrefix)
-                } else if (optimizedChildNode.tree.size == 1) {
 
-                    val entr = optimizedChildNode.tree.entries.single()
-                    val optimizedLeaf = optimizeNode(optimizedChildNode)
-                    if (optimizedLeaf.value == null) {
-                        if (optimizedLeaf is PrefixTreeNode) {
-                            return PrefixTreeNode(childPrefix.toString() + entr.key + optimizedLeaf.prefix, optimizeNodeNullable(optimizedLeaf.node))
-                        } else {
-                            return PrefixTreeNode(childPrefix.toString() + entr.key.toString(), optimizedLeaf)
-                        }
-                    }
-                }
+        if (currentValue == null) {
+
+            when (optimizedChildNode) {
+                is PrefixTreeNode -> return optimizedChildNode.withExtraPrefix(childPrefix)
+                //is ValueNode -> return PrefixTreeNode(childPrefix.toString(), optimizedChildNode)
             }
+            /*val entries = optimizedChildNode.tree.entries
+            if (entries.size == 1 && optimizedChildNode.value == null) {
+                val (key, value) = entries.single()
+                return PrefixTreeNode("${childPrefix}${key}", optimizeNode(value))
+            }*/
+            // todo
         }
 
         val tree = mapOf(childPrefix to optimizeNode(optimizedChildNode))
