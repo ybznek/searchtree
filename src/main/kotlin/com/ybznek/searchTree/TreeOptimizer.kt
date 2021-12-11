@@ -94,7 +94,7 @@ internal object TreeOptimizer {
     private fun <V> createSingleBranch(currentValue: V?, optimizedChildNode: Node<V>, childPrefix: Char): Node<V> {
 
         if (currentValue == null) {
-
+            // todo
             when (optimizedChildNode) {
                 is PrefixTreeNode -> return optimizedChildNode.withExtraPrefix(childPrefix)
                 //is ValueNode -> return PrefixTreeNode(childPrefix.toString(), optimizedChildNode)
