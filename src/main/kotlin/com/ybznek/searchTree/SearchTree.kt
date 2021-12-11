@@ -47,45 +47,43 @@ abstract class SearchTree<V : Any> {
         return sequence {
             val ref = SearchRef<V>()
             for (i in range) {
-                searchInternal(i, root, ref, str)
+                ref.node = root
+                searchInternal(i, ref, str)
             }
         }
     }
 
     internal fun <V> sequenceSearch(str: String, root: Node<V>, startIndexes: Sequence<Int>): Sequence<Result<V>> {
-        return sequence<Result<V>> {
+        return sequence {
             val ref = SearchRef<V>()
             for (i in startIndexes) {
-                searchInternal(i, root, ref, str)
+                ref.node = root
+                searchInternal(i, ref, str)
             }
         }
     }
 
     private suspend fun <V> SequenceScope<Result<V>>.searchInternal(
         index: Int,
-        root: Node<V>,
         ref: SearchRef<V>,
         str: String
     ) {
         var searchIndex = index
-        var node = root
+        var node: Node<V>
         do {
+            node = ref.node!!
             ref.reset()
             node.nextRootOrNode(str, searchIndex, ref)
+            val value = ref.value
 
-            if (ref.value == null && ref.node == null) {
-                break
-            }
-            if (ref.node != null) {
-                node = ref.node as Node<V>
-            }
-            if (ref.value != null) {
-                yield(Result(index, ref.value!!))
+            if (value == null) {
+                if (ref.node == null)
+                    break
+            } else {
+                yield(Result(index, value))
             }
 
             searchIndex += ref.shift
-
-
         } while (searchIndex < str.length)
     }
 
@@ -109,7 +107,7 @@ abstract class SearchTree<V : Any> {
         return list
     }
 
-    internal class SearchRef<V> {
+    internal class SearchRef<V>() {
         var shift: Int = 1
         var node: Node<V>? = null
         var value: V? = null
