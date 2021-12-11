@@ -3,7 +3,8 @@ package com.ybznek.searchTree
 import com.ybznek.searchTree.node.ImmutableNode
 import com.ybznek.searchTree.node.ImmutableNodeGeneric
 import com.ybznek.searchTree.node.Node
-import com.ybznek.searchTree.node.PrefixTreeNodeGeneral
+import com.ybznek.searchTree.node.PrefixTreeNodeBase
+import com.ybznek.searchTree.node.PrefixTreeNodeNodeAndValue
 import com.ybznek.searchTree.node.PrefixTreeNodeNodeOnly
 import com.ybznek.searchTree.node.PrefixTreeNodeValueOnly
 import com.ybznek.searchTree.node.TreeOnlyNode
@@ -90,7 +91,7 @@ internal object TreeOptimizer {
 
         if (currentValue == null) {
             when (optimizedChildNode) {
-                is PrefixTreeNodeGeneral -> return optimizedChildNode.withExtraPrefix(childPrefix)
+                is PrefixTreeNodeBase -> return optimizedChildNode.withExtraPrefix(childPrefix)
                 is ValueOnlyNode -> Unit//return PrefixTreeNodeValueOnly(childPrefix.toString(), optimizedChildNode.value)
 
                 is TreeOnlyNode -> {
@@ -111,7 +112,7 @@ internal object TreeOptimizer {
                     if (tree.size == 1) {
                         val f = tree.first()
                         when (f.value) {
-                            is ValueOnlyNode -> return PrefixTreeNodeGeneral(childPrefix.toString(), TreeOnlyNode(mapOf(f.key to f.value)), optimizedChildNode.value)
+                            is ValueOnlyNode -> return PrefixTreeNodeNodeAndValue(childPrefix.toString(), TreeOnlyNode(mapOf(f.key to f.value)), optimizedChildNode.value)
                         }
 
                     }

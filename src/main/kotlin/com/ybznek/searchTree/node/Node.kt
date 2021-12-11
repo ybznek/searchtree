@@ -22,15 +22,15 @@ internal sealed class Node<V> {
 internal sealed class ImmutableNode<V> : Node<V>() {
 }
 
-internal open class PrefixTreeNodeGeneral<V> constructor(internal val prefix: String, internal val node: Node<V>?, override val value: V?) : ImmutableNode<V>() {
+internal sealed class PrefixTreeNodeBase<V> constructor(internal val prefix: String) : ImmutableNode<V>() {
 
-    fun withExtraPrefix(prefix: Char): PrefixTreeNodeGeneral<V> {
+    abstract val node: Node<V>?
+
+    fun withExtraPrefix(prefix: Char): PrefixTreeNodeBase<V> {
         return withNewPrefix(prefix + this.prefix)
     }
 
-    open fun withNewPrefix(newPrefix: String): PrefixTreeNodeGeneral<V> {
-        return PrefixTreeNodeGeneral(newPrefix, node, value)
-    }
+    abstract fun withNewPrefix(newPrefix: String): PrefixTreeNodeBase<V>
 
     override val tree: Map<Char, Node<V>>
         get() {
@@ -56,14 +56,26 @@ internal open class PrefixTreeNodeGeneral<V> constructor(internal val prefix: St
     }
 }
 
-internal class PrefixTreeNodeNodeOnly<V> constructor(prefix: String, node: Node<V>?) : PrefixTreeNodeGeneral<V>(prefix, node, null) {
+internal class PrefixTreeNodeNodeAndValue<V>(val str: String, override val node: Node<V>, override val value: V?) : PrefixTreeNodeBase<V>(prefix = str) {
+    override fun withNewPrefix(newPrefix: String): PrefixTreeNodeBase<V> {
+        return PrefixTreeNodeNodeAndValue(newPrefix, node, value)
+    }
+}
+
+internal class PrefixTreeNodeNodeOnly<V> constructor(prefix: String, override val node: Node<V>?) : PrefixTreeNodeBase<V>(prefix) {
+
+    override val value: V?
+        get() = null
 
     override fun withNewPrefix(newPrefix: String): PrefixTreeNodeNodeOnly<V> {
         return PrefixTreeNodeNodeOnly(newPrefix, node)
     }
 }
 
-internal class PrefixTreeNodeValueOnly<V> constructor(prefix: String, override val value: V?) : PrefixTreeNodeGeneral<V>(prefix, null, value) {
+internal class PrefixTreeNodeValueOnly<V> constructor(prefix: String, override val value: V?) : PrefixTreeNodeBase<V>(prefix) {
+
+    override val node: Node<V>?
+        get() = null
 
     override fun withNewPrefix(newPrefix: String): PrefixTreeNodeValueOnly<V> {
         return PrefixTreeNodeValueOnly(newPrefix, value)

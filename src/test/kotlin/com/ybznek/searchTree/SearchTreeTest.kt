@@ -5,7 +5,7 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isNotNull
 import assertk.assertions.isTrue
 import com.ybznek.searchTree.node.Node
-import com.ybznek.searchTree.node.PrefixTreeNodeGeneral
+import com.ybznek.searchTree.node.PrefixTreeNodeBase
 import com.ybznek.searchTree.node.PrefixTreeNodeNodeOnly
 import com.ybznek.searchTree.node.PrefixTreeNodeValueOnly
 import com.ybznek.searchTree.node.TreeOnlyNode
@@ -72,7 +72,7 @@ class SearchTreeTest {
         searchTree.addKeyValue("1234", "match")
         searchTree.addKeyValue("1234B", "match2")
         val o = searchTree.optimized() as ImmutableSearchTree<SearchTree.ValueWithKey<String>>
-        val root = getChecked<PrefixTreeNodeGeneral<SearchTree.ValueWithKey<String>>>(o.root)
+        val root = getChecked<PrefixTreeNodeBase<SearchTree.ValueWithKey<String>>>(o.root)
         assertThat(root.prefix).isEqualTo("1234")
 
         val treeNode = getChecked<TreeOnlyNode<SearchTree.ValueWithKey<String>>>(root.tree['1']!!.tree['2']!!.tree['3']!!.tree['4'])
