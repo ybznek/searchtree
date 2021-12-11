@@ -14,7 +14,7 @@ Build search tree which can effectively search multiple strings in one large str
 Step 2. Add the dependency
 
 	dependencies {
-	        implementation 'com.github.ybznek:searchtree:1.4'
+	        implementation 'com.github.ybznek:searchtree:1.5'
 	}
 
 Examples:
