@@ -92,7 +92,7 @@ internal object TreeOptimizer {
         if (currentValue == null) {
             when (optimizedChildNode) {
                 is PrefixTreeNodeBase -> return optimizedChildNode.withExtraPrefix(childPrefix)
-                is ValueOnlyNode -> Unit//return PrefixTreeNodeValueOnly(childPrefix.toString(), optimizedChildNode.value)
+                is ValueOnlyNode -> return PrefixTreeNodeValueOnly(childPrefix.toString(), optimizedChildNode.value)
 
                 is TreeOnlyNode -> {
                     val tree = optimizedChildNode.tree.entries
