@@ -2,6 +2,7 @@ package com.ybznek.searchTree
 
 import com.ybznek.searchTree.node.ImmutableNode
 import com.ybznek.searchTree.node.Node
+import com.ybznek.searchTree.node.PrefixTreeNode
 import com.ybznek.searchTree.node.TreeNode
 import com.ybznek.searchTree.node.ValueNode
 
@@ -14,6 +15,12 @@ internal object TreeOptimizer {
             EmptySearchTree as SearchTree<V>
         else
             ImmutableSearchTree(optimizeNode(root))
+    }
+
+    private fun <V> optimizeNodeNullable(node: Node<V>?): Node<V>? {
+        if (node == null)
+            return null
+        return optimizeNode(node)
     }
 
     private fun <V> optimizeNode(node: Node<V>): Node<V> {
@@ -80,29 +87,34 @@ internal object TreeOptimizer {
 
     private fun <V> createSingleBranchTree(node: Node<V>): Node<V> {
         val entry = node.tree.entries.single()
-        val entryValue = entry.value
-        /*
-        if (node.value == null) {
-            if (entryValue is Node.PrefixTreeNode) {
-                return Node.PrefixTreeNode(entry.key + entryValue.prefix, entryValue.node)
-            } else if (entryValue.tree.size == 1) {
 
-                val entr = entryValue.tree.entries.single()
-                val optimizedLeaf = optimizeNode(entry.value)
-                if (entr.value.value != null) {
-                    if (optimizedLeaf is Node.PrefixTreeNode) {
-                        return Node.PrefixTreeNode(entry.key.toString() + optimizedLeaf.prefix, optimizedLeaf.node)
-                    } else {
-                        return Node.PrefixTreeNode(entry.key.toString() + entr.key.toString(), entr.value)
+        return createSingleBranch(node.value, optimizeNode(entry.value), entry.key)
+    }
+
+    private fun <V> createSingleBranch(currentValue: V?, optimizedChildNode: Node<V>, childPrefix: Char): Node<V> {
+        if (false) { //todo
+            if (currentValue == null) {
+                if (optimizedChildNode is PrefixTreeNode) {
+                    return optimizedChildNode.withExtraPrefix(childPrefix)
+                } else if (optimizedChildNode.tree.size == 1) {
+
+                    val entr = optimizedChildNode.tree.entries.single()
+                    val optimizedLeaf = optimizeNode(optimizedChildNode)
+                    if (optimizedLeaf.value == null) {
+                        if (optimizedLeaf is PrefixTreeNode) {
+                            return PrefixTreeNode(childPrefix.toString() + entr.key + optimizedLeaf.prefix, optimizeNodeNullable(optimizedLeaf.node))
+                        } else {
+                            return PrefixTreeNode(childPrefix.toString() + entr.key.toString(), optimizedLeaf)
+                        }
                     }
                 }
-
             }
-        }*/
-        val tree = mapOf(entry.key to optimizeNode(entryValue))
-        return when (node.value) {
+        }
+
+        val tree = mapOf(childPrefix to optimizeNode(optimizedChildNode))
+        return when (currentValue) {
             null -> TreeNode(tree)
-            else -> ImmutableNode(node.value, tree)
+            else -> ImmutableNode(currentValue, tree)
         }
     }
 }

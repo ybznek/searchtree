@@ -19,7 +19,12 @@ internal sealed class Node<V> {
     }
 }
 
-internal class PrefixTreeNode<V>(private val prefix: String, private val node: Node<V>?) : Node<V>() {
+internal class PrefixTreeNode<V> constructor(internal val prefix: String, internal val node: Node<V>?) : Node<V>() {
+
+    fun withExtraPrefix(prefix: Char): PrefixTreeNode<V> {
+        return PrefixTreeNode(prefix + this.prefix, node)
+    }
+
     override val tree: Map<Char, Node<V>>
         get() {
             val nextNode = if (prefix.length == 1) {

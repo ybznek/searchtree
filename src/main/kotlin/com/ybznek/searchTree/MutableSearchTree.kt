@@ -37,5 +37,9 @@ fun <V> MutableSearchTree<SearchTree.ValueWithKey<V>>.addKeyValue(kv: SearchTree
     this.add(kv.key, kv)
 }
 
+fun <V> MutableSearchTree<SearchTree.ValueWithKey<V>>.addKeyValue(key: String, value: V) {
+    this.addKeyValue(SearchTree.ValueWithKey<V>(key, value))
+}
+
 
 

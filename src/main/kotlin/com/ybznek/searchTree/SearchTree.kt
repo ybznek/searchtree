@@ -67,7 +67,6 @@ abstract class SearchTree<V : Any> {
     ) {
         var searchIndex = index
         var node = root
-
         do {
             ref.reset()
             node.getNextRootOrNode(str, searchIndex, ref)
@@ -79,7 +78,7 @@ abstract class SearchTree<V : Any> {
                 node = ref.node as Node<V>
             }
             if (ref.value != null) {
-                yield(Result(searchIndex, ref.value!!))
+                yield(Result(searchIndex - str.length + 1, ref.value!!))
             }
 
             searchIndex += ref.shift
