@@ -61,13 +61,6 @@ internal class PrefixTreeNodeNodeOnly<V> constructor(prefix: String, node: Node<
     override fun withNewPrefix(newPrefix: String): PrefixTreeNodeNodeOnly<V> {
         return PrefixTreeNodeNodeOnly(newPrefix, node)
     }
-
-    override fun nextRootOrNode(str: String, index: Int, ref: SearchRef<V>) {
-        if (str.regionMatches(index, prefix, 0, prefix.length)) {
-            ref.node = node
-            ref.shift = prefix.length
-        }
-    }
 }
 
 internal class PrefixTreeNodeValueOnly<V> constructor(prefix: String, override val value: V?) : PrefixTreeNodeGeneral<V>(prefix, null, value) {
@@ -75,15 +68,7 @@ internal class PrefixTreeNodeValueOnly<V> constructor(prefix: String, override v
     override fun withNewPrefix(newPrefix: String): PrefixTreeNodeValueOnly<V> {
         return PrefixTreeNodeValueOnly(newPrefix, value)
     }
-
-    override fun nextRootOrNode(str: String, index: Int, ref: SearchRef<V>) {
-        if (str.regionMatches(index, prefix, 0, prefix.length)) {
-            ref.value = value
-            ref.shift = prefix.length
-        }
-    }
 }
-
 
 internal class ImmutableNodeGeneric<V>(
     override val value: V? = null,

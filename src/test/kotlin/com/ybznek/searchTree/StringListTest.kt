@@ -22,8 +22,8 @@ class StringListTest {
 
     @Test
     fun emptySingleton() {
-        assertThat(StringList.EMPTY===StringList.of()).isTrue()
-        assertThat(StringList.EMPTY===StringList.ofLowerCase()).isTrue()
+        assertThat(StringList.EMPTY === StringList.of()).isTrue()
+        assertThat(StringList.EMPTY === StringList.ofLowerCase()).isTrue()
 
     }
 

@@ -11,7 +11,6 @@ import com.ybznek.searchTree.node.PrefixTreeNodeValueOnly
 import com.ybznek.searchTree.node.TreeOnlyNode
 import com.ybznek.searchTree.node.ValueOnlyNode
 import org.junit.jupiter.api.Test
-import java.lang.IllegalStateException
 import kotlin.reflect.KClass
 
 class SearchTreeTest {

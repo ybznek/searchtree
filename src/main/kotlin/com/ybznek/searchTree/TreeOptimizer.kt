@@ -8,7 +8,6 @@ import com.ybznek.searchTree.node.PrefixTreeNodeNodeOnly
 import com.ybznek.searchTree.node.PrefixTreeNodeValueOnly
 import com.ybznek.searchTree.node.TreeOnlyNode
 import com.ybznek.searchTree.node.UnitNode
-import com.ybznek.searchTree.node.UnitNode.tree
 import com.ybznek.searchTree.node.ValueOnlyNode
 
 internal object TreeOptimizer {
