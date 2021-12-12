@@ -80,28 +80,39 @@ internal class PrefixTreeNodeNodeOnly<V> constructor(prefix: String, override va
 }
 
 internal class PrefixTreeNodeValueOnly<V> constructor(prefix: String, override val value: V?) : PrefixTreeNodeBase<V>(prefix) {
-
     override val node: Node<V>?
         get() = null
 
-    override fun withNewPrefix(newPrefix: String): PrefixTreeNodeValueOnly<V> {
-        return PrefixTreeNodeValueOnly(newPrefix, value)
-    }
-
+    override fun withNewPrefix(newPrefix: String) = PrefixTreeNodeValueOnly(newPrefix, value)
     override fun toString() = "PrefixTreeNodeValueOnly(prefix='$prefix', value=$value)"
+}
+
+internal class PrefixTreeNodeUnitOnly constructor(prefix: String) : PrefixTreeNodeBase<Unit>(prefix) {
+    override val node: Node<Unit>?
+        get() = null
+
+    override fun withNewPrefix(newPrefix: String) = PrefixTreeNodeUnitOnly(newPrefix)
+    override fun toString() = "PrefixTreeNodeUnitOnly(prefix='$prefix')"
+    override val value: Unit
+        get() = Unit
+
+    inline fun <V> type(): ImmutableNode<V> {
+        @Suppress("UNCHECKED_CAST")
+        return this as ImmutableNode<V>
+    }
 }
 
 internal class ImmutableNodeGeneric<V>(
     override val value: V? = null,
     override val tree: Map<Char, Node<V>>
-) : ImmutableNode<V>{
+) : ImmutableNode<V> {
     override fun toString() = "ImmutableNodeGeneric(value=$value, tree=$tree)"
 }
 
 internal class MutableNode<V>(
     override var value: V? = null,
     override var tree: HashMap<Char, MutableNode<V>> = HashMap()
-) : Node<V>{
+) : Node<V> {
     override fun toString() = "MutableNode(value=$value, tree=$tree)"
 }
 

@@ -6,6 +6,7 @@ import com.ybznek.searchTree.node.Node
 import com.ybznek.searchTree.node.PrefixTreeNodeBase
 import com.ybznek.searchTree.node.PrefixTreeNodeNodeAndValue
 import com.ybznek.searchTree.node.PrefixTreeNodeNodeOnly
+import com.ybznek.searchTree.node.PrefixTreeNodeUnitOnly
 import com.ybznek.searchTree.node.PrefixTreeNodeValueOnly
 import com.ybznek.searchTree.node.TreeOnlyNode
 import com.ybznek.searchTree.node.UnitNode
@@ -94,13 +95,15 @@ internal object TreeOptimizer {
             when (optimizedChildNode) {
                 is PrefixTreeNodeBase -> return optimizedChildNode.withExtraPrefix(childPrefix)
                 is ValueOnlyNode -> return PrefixTreeNodeValueOnly(childPrefix.toString(), optimizedChildNode.value)
+                is UnitNode -> return PrefixTreeNodeUnitOnly(childPrefix.toString()).type()
 
                 is TreeOnlyNode -> {
                     val tree = optimizedChildNode.tree.entries
                     if (tree.size == 1) {
                         val f = tree.first()
                         when (f.value) {
-                            is ValueOnlyNode, is UnitNode -> return PrefixTreeNodeValueOnly(childPrefix.toString() + f.key, f.value.value)
+                            is ValueOnlyNode -> return PrefixTreeNodeValueOnly(childPrefix.toString() + f.key, f.value.value)
+                            is UnitNode -> return PrefixTreeNodeUnitOnly(childPrefix.toString() + f.key).type()
                             is TreeOnlyNode -> return PrefixTreeNodeNodeOnly(childPrefix.toString() + f.key, TreeOnlyNode(f.value.tree))
                             else -> Unit
                         }
