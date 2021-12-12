@@ -14,4 +14,6 @@ internal class ImmutableSearchTree<V : Any>(internal val root: Node<V>) : Search
     override fun getValues(): List<Result<V>> {
         return this.getValues(root)
     }
+
+    override fun toString() = "ImmutableSearchTree(root=$root)"
 }

@@ -47,4 +47,11 @@ internal class CharIntervalMap<Value>(private val minChar: Char, private val ite
         return key in minChar..maxChar
     }
 
+    override fun toString(): String {
+        val usedCharacters = keys.filter { chr -> get(chr) != null }.toCharArray()
+        val usedCharactersString = String(usedCharacters)
+        return "CharIntervalMap(keys=$usedCharactersString)"
+    }
+
+
 }

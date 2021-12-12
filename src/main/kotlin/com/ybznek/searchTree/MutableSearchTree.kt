@@ -31,6 +31,8 @@ class MutableSearchTree<V : Any> : SearchTree<V>() {
     override fun searchSequence(str: String, indices: Sequence<Int>): Sequence<Result<V>> {
         return sequenceSearch(str, root, indices)
     }
+
+    override fun toString() = "MutableSearchTree(root=$root)"
 }
 
 fun <V> MutableSearchTree<SearchTree.ValueWithKey<V>>.addKeyValue(kv: SearchTree.ValueWithKey<V>) {
