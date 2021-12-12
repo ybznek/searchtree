@@ -25,7 +25,7 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 publishing {
     publications {
         maven(MavenPublication) {
-            groupId = 'com.ybznek.searchtree'
+            groupId = 'com.github.ybznek'
             artifactId = 'searchtree'
             version = '1.5'
             from components.kotlin
