@@ -94,12 +94,16 @@ internal class PrefixTreeNodeValueOnly<V> constructor(prefix: String, override v
 internal class ImmutableNodeGeneric<V>(
     override val value: V? = null,
     override val tree: Map<Char, Node<V>>
-) : ImmutableNode<V>
+) : ImmutableNode<V>{
+    override fun toString() = "ImmutableNodeGeneric(value=$value, tree=$tree)"
+}
 
 internal class MutableNode<V>(
     override var value: V? = null,
     override var tree: HashMap<Char, MutableNode<V>> = HashMap()
-) : Node<V>
+) : Node<V>{
+    override fun toString() = "MutableNode(value=$value, tree=$tree)"
+}
 
 internal class ValueOnlyNode<V>(override val value: V?) : ImmutableNode<V> {
     override val tree: Map<Char, Node<V>>

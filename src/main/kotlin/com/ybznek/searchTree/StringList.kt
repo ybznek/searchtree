@@ -17,6 +17,9 @@ class StringList private constructor(private val tree: SearchTree<Unit>) {
         return tree.searchSequence(inputString, 0..0).any()
     }
 
+    override fun toString() = "StringList(tree=$tree)"
+
+
     companion object {
 
         @Suppress("UNCHECKED_CAST")
