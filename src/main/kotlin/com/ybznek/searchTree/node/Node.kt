@@ -59,10 +59,12 @@ internal sealed class PrefixTreeNodeBase<V> constructor(internal val prefix: Str
     }
 }
 
-internal class PrefixTreeNodeNodeAndValue<V>(val str: String, override val node: Node<V>, override val value: V?) : PrefixTreeNodeBase<V>(prefix = str) {
+internal class PrefixTreeNodeNodeAndValue<V>(prefix: String, override val node: Node<V>, override val value: V?) : PrefixTreeNodeBase<V>(prefix = prefix) {
     override fun withNewPrefix(newPrefix: String): PrefixTreeNodeBase<V> {
         return PrefixTreeNodeNodeAndValue(newPrefix, node, value)
     }
+
+    override fun toString() = "PrefixTreeNodeNodeAndValue(str='$prefix', node=$node, value=$value)"
 }
 
 internal class PrefixTreeNodeNodeOnly<V> constructor(prefix: String, override val node: Node<V>?) : PrefixTreeNodeBase<V>(prefix) {
@@ -73,6 +75,8 @@ internal class PrefixTreeNodeNodeOnly<V> constructor(prefix: String, override va
     override fun withNewPrefix(newPrefix: String): PrefixTreeNodeNodeOnly<V> {
         return PrefixTreeNodeNodeOnly(newPrefix, node)
     }
+
+    override fun toString() = "PrefixTreeNodeNodeOnly(prefix='$prefix', node=$node)"
 }
 
 internal class PrefixTreeNodeValueOnly<V> constructor(prefix: String, override val value: V?) : PrefixTreeNodeBase<V>(prefix) {
@@ -83,6 +87,8 @@ internal class PrefixTreeNodeValueOnly<V> constructor(prefix: String, override v
     override fun withNewPrefix(newPrefix: String): PrefixTreeNodeValueOnly<V> {
         return PrefixTreeNodeValueOnly(newPrefix, value)
     }
+
+    override fun toString() = "PrefixTreeNodeValueOnly(prefix='$prefix', value=$value)"
 }
 
 internal class ImmutableNodeGeneric<V>(
@@ -98,11 +104,14 @@ internal class MutableNode<V>(
 internal class ValueOnlyNode<V>(override val value: V?) : ImmutableNode<V> {
     override val tree: Map<Char, Node<V>>
         get() = emptyMap()
+
+    override fun toString() = "ValueOnlyNode(value=$value)"
 }
 
 internal object UnitNode : ImmutableNode<Unit> {
     override val tree: Map<Char, Node<Unit>>
         get() = emptyMap()
+
     override val value
         get() = Unit
 
@@ -110,9 +119,13 @@ internal object UnitNode : ImmutableNode<Unit> {
         @Suppress("UNCHECKED_CAST")
         return this as ImmutableNode<V>
     }
+
+    override fun toString() = "UnitNode"
 }
 
 internal class TreeOnlyNode<V>(override var tree: Map<Char, Node<V>>) : ImmutableNode<V> {
     override val value: V?
         get() = null
+
+    override fun toString() = "TreeOnlyNode(tree=$tree)"
 }

@@ -77,6 +77,7 @@ internal object TreeOptimizer {
             }
         }
 
+        @Suppress("UNCHECKED_CAST")
         return CharIntervalMap(min.toChar(), arr as Array<Node<V>>)
     }
 
