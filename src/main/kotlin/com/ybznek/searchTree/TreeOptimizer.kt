@@ -38,17 +38,21 @@ internal class TreeOptimizer private constructor(private val optimizeValues: Boo
     }
 
     private fun <V> optimizeNode(node: Node<V>): ImmutableNode<V> {
-        if (node.tree.isEmpty()) {
-            return createValueNode(node)
-        }
+        fun <V> optimizeNodeInternal(node: Node<V>): ImmutableNode<V> {
+            if (node.tree.isEmpty()) {
+                return createValueNode(node)
+            }
 
-        return when (node.tree.size) {
-            1 -> createSingleBranchTree(node)
-            else -> when (node.value) {
-                null -> TreeOnlyNode(createMultiBranchTree(node))
-                else -> ImmutableNodeGeneric(node.value, createMultiBranchTree(node))
+            return when (node.tree.size) {
+                1 -> createSingleBranchTree(node)
+                else -> when (node.value) {
+                    null -> TreeOnlyNode(createMultiBranchTree(node))
+                    else -> ImmutableNodeGeneric(node.value, createMultiBranchTree(node))
+                }
             }
         }
+
+        return equalObjectPool[optimizeNodeInternal(node)]
     }
 
     private fun <V> createValueNode(node: Node<V>): ImmutableNode<V> {
