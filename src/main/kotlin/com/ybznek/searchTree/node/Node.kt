@@ -29,10 +29,6 @@ internal sealed class PrefixTreeNodeBase<V> constructor(internal val prefix: Str
 
     abstract val node: Node<V>?
 
-    fun withExtraPrefix(prefix: Char): PrefixTreeNodeBase<V> {
-        return withNewPrefix(prefix + this.prefix)
-    }
-
     abstract fun withNewPrefix(newPrefix: String): PrefixTreeNodeBase<V>
 
     override val tree: Map<Char, Node<V>>

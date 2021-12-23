@@ -9,7 +9,7 @@ import java.lang.Integer.min
  */
 abstract class SearchTree<V : Any> {
 
-    class ValueWithKey<V>(
+    data class ValueWithKey<V>(
         /**
          * Search key
          */
