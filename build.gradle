@@ -2,7 +2,7 @@ group 'com.ybznek'
 version '1.0.0'
 
 buildscript {
-    ext.kotlin_version = '1.6.10'
+    ext.kotlin_version = '1.7.0'
     ext.junit_version = '5.8.2'
     ext.assertk_version = '0.25'
 
@@ -27,7 +27,7 @@ publishing {
         maven(MavenPublication) {
             groupId = 'com.github.ybznek'
             artifactId = 'searchtree'
-            version = '1.5'
+            version = '1.6'
             from components.kotlin
         }
     }
