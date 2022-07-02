@@ -29,13 +29,12 @@ Constructs search tree, basic node of mutable tree:
 		val tree: Map<Char, Node<V>> // HashMap
 	}
 
-*Optimized tree* uses *multiple classes* for node representation, e.g. class for value-only Node. Some nodes uses different Map<> implementations according to tree structure. 
+*Optimized tree* uses *multiple classes* for node representation, e.g. class for value-only Node. Some nodes uses different Map<> implementations according to tree structure.
 
 	internal class ValueOnlyNode<V>(override val value: V?) : ImmutableNode<V> {
 	override val tree: Map<Char, Node<V>>
 		get() = emptyMap()
 	}
-
 
 Example of usage
 
@@ -48,8 +47,8 @@ Example of usage
 
 StringList:
 ----------
-Wrapper around SearchTree. Provides ability to check occurence of multiple strings in one large string. Useful in case when there is large constant set of strings and string to search is large 
-	
+Wrapper around SearchTree. Provides ability to check occurence of multiple strings in one large string. Useful in case when there is large constant set of strings and string to search is large
+
 	val list = StringList.of("monkey", "notebooks")
 	assertThat(list isIn "test | notebooks | something").isTrue()
 
