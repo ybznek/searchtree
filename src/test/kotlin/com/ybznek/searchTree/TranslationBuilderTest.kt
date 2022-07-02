@@ -14,4 +14,14 @@ internal class TranslationBuilderTest {
             .isEmpty()
     }
 
+    @Test
+    fun testEmptyInput() {
+        val tree = TranslationBuilder.build {
+            from() to "str3"
+        }
+
+        assertThat(tree.getValues())
+            .isEmpty()
+    }
+
 }
