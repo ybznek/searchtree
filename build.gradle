@@ -2,7 +2,7 @@ group 'com.ybznek'
 version '1.0.0'
 
 buildscript {
-    ext.kotlin_version = '1.7.0'
+    ext.kotlin_version = '1.7.10'
     ext.junit_version = '5.8.2'
     ext.assertk_version = '0.25'
 
