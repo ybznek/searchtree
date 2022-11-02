@@ -3,7 +3,7 @@ version '1.0.0'
 
 buildscript {
     ext.kotlin_version = '1.7.20'
-    ext.junit_version = '5.8.2'
+    ext.junit_version = '5.9.1'
     ext.assertk_version = '0.25'
 
     repositories {
